@@ -22,7 +22,7 @@ services:
       - "5252:5252"
 
   browser:
-    image: seleniarm/standalone-chromium:4.7.2
+    image: seleniarm/standalone-chromium
     platform: linux/amd64
     ports:
       - "4444:4444"
@@ -40,4 +40,4 @@ services:
       - allure
       - allure-ui
     environment:
-      - AUTH_TOKEN=
+      - AUTH_TOKEN=changeme
