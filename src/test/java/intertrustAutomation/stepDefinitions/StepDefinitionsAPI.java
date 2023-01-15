@@ -7,10 +7,8 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import org.junit.Assert;
-
-
 import java.util.ArrayList;
-import java.util.Arrays;
+
 
 import static io.restassured.RestAssured.given;
 
@@ -52,7 +50,7 @@ public class StepDefinitionsAPI {
 
     @And("Verify that forecast is given for {int} days")
     public void verifyThatForecastIsGivenForGivenDays(int forecastedDays) {
-        ArrayList<String> days = new ArrayList<>(Arrays.asList(response.path("days")));
+        ArrayList days = response.path("days");
         Assert.assertEquals(forecastedDays, days.size());
     }
 }
