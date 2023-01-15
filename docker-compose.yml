@@ -22,7 +22,7 @@ services:
       - "5252:5252"
 
   browser:
-    image: seleniarm/standalone-chromium
+    image: selenium/standalone-chrome:latest
     platform: linux/amd64
     ports:
       - "4444:4444"

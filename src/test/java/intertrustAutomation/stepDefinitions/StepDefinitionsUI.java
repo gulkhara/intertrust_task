@@ -8,36 +8,32 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import org.junit.Assert;
 import org.openqa.selenium.*;
-import org.openqa.selenium.chrome.ChromeDriver;
-import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.time.Duration;
 
 
 public class StepDefinitionsUI {
     
     private static WebDriver driver;
-    private static String searchedCity;
-    private static String url = "https://www.visualcrossing.com";
-    public static String chromeDriver = "http://browser:4444/wd/hub";
+    private static WebDriverWait wait;
+    private static final String url = "https://www.visualcrossing.com";
+    private static final String chromeDriver = "http://browser:4444/wd/hub";
     PageElements pageElements;
+    private static String searchedCity;
 
 
     @Before("@UIFeatures")
     public static void setWebDriver() throws MalformedURLException {
-//        WebDriverManager.chromedriver().setup();
-//        driver = new ChromeDriver();
-
         // Setting up chrome driver before running the scenario in UIFeatures
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("--disable-extensions");
-        options.addArguments("--headless");
-        options.addArguments("--disable-gpu");
-        options.addArguments("--no-sandbox");
         driver = new RemoteWebDriver(new URL(chromeDriver), options);
+        wait = new WebDriverWait(driver, Duration.ofSeconds(3L));
     }
 
     @After("@UIFeatures")
@@ -52,14 +48,17 @@ public class StepDefinitionsUI {
         driver.get(url);
         driver.manage().window().maximize();
 
-        // Accept the cookies in the pop-up
+        // Wait until the visibility of Accept button in the cookies pop-up
         pageElements = new PageElements(driver);
+        wait.until(ExpectedConditions.visibilityOf(pageElements.acceptCookiesBtn));
         pageElements.acceptCookiesBtn.click();
     }
 
     @And("Select the “Weather Data” menu")
     public void selectTheWeatherDataMenu() {
         pageElements = new PageElements(driver);
+        // Wait until the visibility of the Weather Data menu and click
+        wait.until(ExpectedConditions.visibilityOf(pageElements.weatherDataMenu));
         pageElements.weatherDataMenu.click();
     }
 
@@ -68,6 +67,8 @@ public class StepDefinitionsUI {
         pageElements = new PageElements(driver);
 
         searchedCity = city;
+        // Wait until the visibility of city text field
+        wait.until(ExpectedConditions.visibilityOf(pageElements.cityTextField));
         pageElements.cityTextField.sendKeys(city);
         pageElements.searchBtn.click();
     }
@@ -76,7 +77,9 @@ public class StepDefinitionsUI {
     public void verifyThatWeatherForecastIsShownForTheCity() {
         pageElements = new PageElements(driver);
 
-        Assert.assertTrue(pageElements.locationDropdownMenuButton.isDisplayed());
+        // Wait until the visibility of all elements
+        wait.until(ExpectedConditions.visibilityOfAllElements(pageElements.locationDropdownMenuButton, pageElements.maxTemp, pageElements.minTemp));
+
         // Verify that weather forecast is displayed for the searched city
         Assert.assertEquals(searchedCity, pageElements.locationDropdownMenuButton.getText());
 
