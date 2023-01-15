@@ -13,10 +13,10 @@ cd intertrust_task
 
 ### Environmental variables must be added before running tests
 
-Open "docker-compose.yml" and change following variables:
+Open "docker-compose.yml" and replace changeme into valid auth token:
 
 ```yml
-- AUTH_TOKEN=changeme "X-Auth-Key token"
+- AUTH_TOKEN=changeme
 ```
 
 
